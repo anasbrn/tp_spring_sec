@@ -28,8 +28,10 @@
             <td th:text="${p.getPrice()}"></td>
             <td th:text="${p.getDescription()}"></td>
             <td class="d-flex gap-2">
-                <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete
-                </button>
+                <form th:action="@{'/admin/products/delete/' + ${p.getId()}}" method="post">
+                    <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete
+                    </button>
+                </form>
                 <button type="button" class="btn btn-secondary">
                     Edit
                 </button>
