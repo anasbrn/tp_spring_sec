@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="https://www.ultraq.net.nz/thymeeleaf/layout"
+      layout:decorate="/layouts/navbar">
 <head>
     <meta charset="UTF-8">
     <title>New Product</title>
 </head>
 <body>
-
+<div layout:fragment="content">
+    <h1 class="offset-5">Add new product</h1>
+    <form th:action="@{/admin/products/store}" method="post">
+        <div class="col-7 container p-5 rounded bg-body-secondary" style="height: 100vh">
+            <div class="mb-2">
+                <label for="name">Name</label>
+                <input class="form-control" type="text" name="name" id="name" th:value="${product.name}">
+                <span class="text-danger" th:errors="${product.name}"></span>
+            </div>
+            <div class="mb-2">
+                <label for="price">Price</label>
+                <input class="form-control" type="text" name="price" id="price" th:value="${product.price}">
+                <span class="text-danger" th:errors="${product.price}"></span>
+            </div>
+            <div class="mb-2">
+                <label for="description">Description</label>
+                <textarea class="form-control" name="description" id="description" th:value="${product.description}"></textarea>
+                <span class="text-danger" th:errors="${product.description}"></span>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>
