@@ -1,6 +1,7 @@
 package org.tp_spring_sec.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.tp_spring_sec.entities.Product;
 
-public interface ProductRepository extends JpaRepository {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }
