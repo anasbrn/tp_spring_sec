@@ -28,28 +28,49 @@ public class ProductController {
     }
 
     @GetMapping("/public/products")
-    public String index(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public String index(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size, @RequestParam(required = false) String search) {
+        Page<Product> products;
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAll(pageable);
+        if (search != null) {
+            products = productRepository.findByNameContainingIgnoreCase(search, pageable);
+        } else {
+            products = productRepository.findAll(pageable);
+        }
         model.addAttribute("products", products);
+        model.addAttribute("search", search);
         return "views/product/products_view";
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/products/delete/{id}")
     public String delete(@PathVariable(name = "id") Long id) {
         productRepository.deleteById(id);
         return "redirect:/public/products";
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/products/new")
     public String newProduct(Model model) {
         model.addAttribute("product", new Product());
         return "views/product/new_product";
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/products/edit/{id}")
+    public String newProduct(Model model, @PathVariable(name = "id")  Long id) {
+        Product product = productRepository.findById(id).get();
+        model.addAttribute("product", product);
+        return "views/product/edit_product";
+    }
+
+    @PostMapping("/admin/products/update/{id}")
+    public String updateProduct(Model model, @PathVariable(name = "id") Long id, @Valid Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "views/product/edit_product";
+        product.setId(id);
+        productRepository.save(product);
+        return "redirect:/public/products";
+    }
+
+    //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/products/store")
     public String store(@Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "views/product/new_product";
