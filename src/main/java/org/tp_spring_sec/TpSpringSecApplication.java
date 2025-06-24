@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.tp_spring_sec.entities.Product;
 import org.tp_spring_sec.repositories.ProductRepository;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication()
 public class TpSpringSecApplication {
 
     public static void main(String[] args) {
