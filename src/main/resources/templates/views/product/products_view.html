@@ -12,7 +12,8 @@
 <div layout:fragment="content" class="mt-5 mx-3 offset-5">
     <div class="d-flex justify-content-between mb-2">
         <h1>List of products</h1>
-        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/products/new}" class="btn btn-info text-white">Add Product</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/public/public/products/new}" class="btn btn-info text-white">Add
+            Product</a>
     </div>
     <table class="table table-striped table-bordered">
         <thead>
@@ -29,7 +30,7 @@
             <td th:text="${p.getPrice()}"></td>
             <td th:text="${p.getDescription()}"></td>
             <td class="d-flex gap-2">
-                <form th:action="@{'/admin/products/delete/' + ${p.getId()}}" method="post">
+                <form th:action="@{'/admin/public/products/delete/' + ${p.getId()}}" method="post">
                     <button onclick="return confirm('Are you sure?')" type="submit" class="btn btn-danger">Delete
                     </button>
                 </form>
@@ -40,6 +41,41 @@
         </tr>
         </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+
+            <li th:class="${!products.hasPrevious()} ? 'page-item disabled' : 'page-item'">
+                <a th:if="${products.hasPrevious()}"
+                   class="page-link"
+                   th:href="@{/public/public/products(page=${products.number - 1}, size=${products.size})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+
+                <a th:unless="${products.hasPrevious()}"
+                   class="page-link disabled" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+                th:classappend="${i == products.number} ? 'active' : ''"
+                class="page-item">
+                <a class="page-link"
+                   th:href="@{/public/products(page=${i}, size=${products.size})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+
+            <li th:classappend="${products.hasNext()} ? '' : 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:href="${products.hasNext()} ? @{/public/products(page=${products.number + 1}, size=${products.size})} : '#'"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

@@ -2,13 +2,13 @@ package org.tp_spring_sec.controllers;
 
 import jakarta.validation.Valid;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.tp_spring_sec.entities.Product;
 import org.tp_spring_sec.repositories.ProductRepository;
 
@@ -28,8 +28,9 @@ public class ProductController {
     }
 
     @GetMapping("/public/products")
-    public String index(Model model) {
-        List<Product> products = productRepository.findAll();
+    public String index(Model model, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAll(pageable);
         model.addAttribute("products", products);
         return "views/product/products_view";
     }
